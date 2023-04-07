@@ -1,32 +1,28 @@
-import React, { Component } from 'react';
-import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 
 // Background colors defined
 const backgroundColors = {
-  black: '#090807',
-  purple: '#7722FF',
+  yellow: '#FFCC00',
+  purple: '#A153F4',
   grey: '#808080',
   green: '#009922',
 };
 
-export default class Start extends Component {
+export default class Start extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { name: '', color: '' };
+    this.state = { 
+      name: '',
+      color: ''
+    }
   }
 
   render() {
     return (
       <View style={styles.container}>
         <ImageBackground
-          source={require('../assets/backgroundimage.png')}
+          source={require("../assets/backgroundimage.png")}
           style={styles.image}
         >
         <Text style={styles.title}>Chat App</Text>
@@ -41,8 +37,8 @@ export default class Start extends Component {
               <Text style={styles.colorText}>Choose Background Color:</Text>
               <View style={styles.colors}>
                 <TouchableOpacity
-                  style={[styles.color,{ backgroundColor: backgroundColors.black }]}
-                  onPress={() => this.setState({ color: backgroundColors.black })}
+                  style={[styles.color,{ backgroundColor: backgroundColors.yellow }]}
+                  onPress={() => this.setState({ color: backgroundColors.yellow })}
                 />
                 <TouchableOpacity
                   style={[styles.color,{ backgroundColor: backgroundColors.purple }]}
@@ -109,7 +105,7 @@ const styles = StyleSheet.create({
     opacity: 50,
     height: 60,
     width: '88%',
-    borderColor: 'lightgrey',
+    borderColor: '#AABBCC',
     borderWidth: 2,
     borderRadius: 5,
     padding: '5%',
