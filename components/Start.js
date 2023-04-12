@@ -1,71 +1,87 @@
-import React from 'react';
-import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import { useState } from 'react';
+import {
+         Alert, ImageBackground, StyleSheet, Text,
+         TextInput, TouchableOpacity, View
+       } from 'react-native';
+import { getAuth, signInAnonymously } from "firebase/auth";
 
-// Background colors defined
-const backgroundColors = {
-  yellow: '#FFCC00',
-  purple: '#A153F4',
-  grey: '#808080',
-  green: '#009922',
-};
+const Start = ({ navigation }) => {
 
-export default class Start extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { 
-      name: '',
-      color: ''
-    }
+  const [name, setName] = useState("");
+  const [color, setColor] = useState("");
+
+  const signInUser = () => {
+    const auth = getAuth();
+    signInAnonymously(auth)
+    .then(_result => {
+      const user = _result;
+      navigation.navigate("Chat", {name: name, userID: user.id, color:color });
+      Alert.alert("You have signed in!");
+    })
+    .catch((error) =>{
+      Alert.alert(error + "Unable to sign in, please try again");
+    })
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
+  const backGroundColors = {
+    yellow: '#FFCC00',
+    purple: '#A153F4',
+    grey: '#808080',
+    green: '#009922',
+  };
+
+  return (
+    <View style={styles.container}>
         <ImageBackground
           source={require("../assets/backgroundimage.png")}
-          style={styles.image}
+          style={styles.backGroundImage}
         >
-        <Text style={styles.title}>Chat App</Text>
+        <Text style={styles.title}>Chat App2</Text>  
           <View style={styles.startbackGround}>
             <TextInput
-              style={styles.input}
-              onChangeText={(name) => this.setState({ name })}
-              value={this.state.name}
-              placeholder="Your Name"
+              style={styles.textInput}
+              onChangeText={setName}
+              value={name}
+              placeholder="Enter user name"
+              accessibilityLabel="Enter user name"
             />
-            <View style={styles.changeColor}>
+            <View style={styles.selectColor}>
               <Text style={styles.colorText}>Choose Background Color:</Text>
-              <View style={styles.colors}>
+              <View style={styles.buttonColors}>
                 <TouchableOpacity
-                  style={[styles.color,{ backgroundColor: backgroundColors.yellow }]}
-                  onPress={() => this.setState({ color: backgroundColors.yellow })}
+                  style={[styles.colorButton,{ backgroundColor: backGroundColors.yellow }]}
+                  onPress={() => setColor({ color: backGroundColors.yellow })}
+                  accessibilityLabel='yellow background'
                 />
                 <TouchableOpacity
-                  style={[styles.color,{ backgroundColor: backgroundColors.purple }]}
-                  onPress={() => this.setState({ color: backgroundColors.purple })}
+                  style={[styles.colorButton,{ backgroundColor: backGroundColors.purple }]}
+                  onPress={() => setColor({ color: backGroundColors.purple })}
+                  accessibilityLabel='purple background'
                 />
                 <TouchableOpacity
-                  style={[styles.color,{ backgroundColor: backgroundColors.grey }]}
-                  onPress={() => this.setState({ color: backgroundColors.grey })}
+                  style={[styles.colorButton,{ backgroundColor: backGroundColors.grey }]}
+                  onPress={() => setColor({ color: backGroundColors.grey })}
+                  accessibilityLabel='grey background'
                 />
                 <TouchableOpacity
-                  style={[styles.color, { backgroundColor: backgroundColors.green }]}
-                  onPress={() => this.setState({ color: backgroundColors.green })}
+                  style={[styles.colorButton, { backgroundColor: backGroundColors.green }]}
+                  onPress={() => setColor({ color: backGroundColors.green })}
+                  accessibilityLabel='green background'
                 />
               </View>
             </View>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.props.navigation.navigate(
-              'Chat', {name: this.state.name, color: this.state.color})}
+            <TouchableOpacity 
+              style={styles.startButton}
+              onPress={() => signInUser()}
             >
-              <Text style={styles.buttonText}>Start Chatting</Text>
+              <Text style={styles.startButtonText}>
+                Start Chat
+              </Text>
             </TouchableOpacity>
           </View>
         </ImageBackground>
-      </View>
-    );
-  }
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -73,7 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  image: {
+  backGroundImage: {
   flex: 1,
   flexDirection: 'column',
   justifyContent: 'space-between',
@@ -88,7 +104,6 @@ const styles = StyleSheet.create({
   color: '#FFFFFF',
   paddingVertical: '15%',
 },
-
   startbackGround: {
     backgroundColor: 'white',
     height: '44%',
@@ -98,7 +113,7 @@ const styles = StyleSheet.create({
     paddingVertical: '6%',
   },
 
-  input: {
+  textInput: {
     fontSize: 16,
     fontWeight: '300',
     color: '#757083',
@@ -111,7 +126,7 @@ const styles = StyleSheet.create({
     padding: '5%',
   },
 
-  changeColor: {
+  selectColor: {
     width: '88%',
     justifyContent: 'center',
   },
@@ -123,11 +138,11 @@ const styles = StyleSheet.create({
     opacity: 100,
   },
 
-  colors: {
+  buttonColors: {
     flexDirection: 'row',
   },
 
-  color: {
+  colorButton: {
     borderRadius: 20,
     width: 40,
     height: 40,
@@ -135,7 +150,7 @@ const styles = StyleSheet.create({
     marginLeft: 25,
   },
 
-  button: {
+  startButton: {
     height: 40,
     width: '88%',
     justifyContent: 'center',
@@ -144,9 +159,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  buttonText: {
+  startButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
   },
 });
+
+export default Start;
