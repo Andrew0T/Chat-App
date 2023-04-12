@@ -1,85 +1,106 @@
-import React from 'react';
-import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
-import avatar from "../assets/avatar.png";
+import { useEffect, useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore";
 
-export default class Chat extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      messages: [],
-    };
-  }
+import { Bubble, GiftedChat } from 'react-native-gifted-chat';
+import avatar from '../assets/avatar.png';
 
-  componentDidMount() {
-    // Set the name property to be included in the navigation bar
-    let name = this.props.route.params.name;
-// Set the welcome message and date of entering the chat or login
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: `Hi ${name}, welcome back!`,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: "React Native",
-            avatar: avatar,
-          },
-        },
-        {
-          _id: 2,
-          text: `${name} is on Chat`,
-          system: true,
-        },
-      ],
-    });
+const Chat = ({ db, route, navigation }) => {
+  const { name, color } = route.params;
+  const [messages, setMessages] = useState([]);
 
-    this.props.navigation.setOptions({ title: name });
-  }
-
-  onSend(messages = []) {
-    this.setState((previousState) => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-  }
-// Sets the color and on screen placement of the chat bubble, user on right
-  renderBubble(props) {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          right: { backgroundColor: '#000'},
-          left: { backgroundColor: '#FFF'},
-        }}
-      />
-    );
-  }
-
-  render() {
-    // Set the color property as background color for the chat screen
-    let color = this.props.route.params.color;
-    return (
-      <View style={[styles.container, { backgroundColor: color }]}>
-        <GiftedChat
-          renderBubble={this.renderBubble.bind(this)}
-          messages={this.state.messages}
-          onSend={(messages) => this.onSend(messages)}
-          user={{
-            _id: 1,
-          }}
-        />
-        {Platform.OS === 'android' ? (
-          <KeyboardAvoidingView behavior="height" />
-        ) : null}
-      </View>
-    );
+const addMessages = async (newMessages) => {
+  const newMessagesRef = await addDoc(collection(db, "messages"), newMessages);
+  if (newMessagesRef.id) {
+      Alert.alert(`The list "${messagesName}" has been added.`);
+  } else {
+      Alert.alert("Unable to add. Please try later");
   }
 }
 
+// Sets the color and on screen placement of the chat bubble, user on right
+const renderBubble = (props) => {
+  return <Bubble
+    {...props}
+    wrapperStyle={{
+      right: {backgroundColor: "#000"},
+      left: {backgroundColor: "#FFF"}
+    }}
+  />
+}
+
+// set navigation options
+useEffect(() => {
+  navigation.setOptions({ title: name, backgroundColor: color });
+  const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+  const unsubMessages = onSnapshot(q, (docs) => {
+    let newMessages = [];
+    docs.forEach(doc => {
+      newMessages.push({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: new Date(doc.data().createdAt.toMillis())
+      })
+    })
+    setMessages(newMessages);
+  })
+  return () => {
+    if (unsubMessages) unsubMessages();
+  }
+ }, []);
+
+ useEffect(() => {
+ setMessages ([
+  {
+    _id: 1,
+    text: `Hi ${name}, welcome back!`,
+    createdAt: new Date(),
+    user: {
+      _id: 2,
+      name: "React Native",
+      avatar: avatar,
+    },
+  },
+  {
+    _id: 2,
+    text: `${name} is on Chat`,
+    system: true,
+  },
+]);
+}, []);
+  
+  // function to handle sending new messages
+  const onSend = (newMessages) => {
+    addDoc(collection(db, "messages"), newMessages[0])
+  }
+  
+  
+  return (
+    <View style={[styles.container, {backgroundColor: color}]} >
+      <Text>Welcome to Chat</Text>
+      <GiftedChat
+        messages={messages}
+        renderBubble={renderBubble}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: 1,
+          name: name,
+          avatar: avatar
+        }}
+      />
+           
+      { Platform.OS === 'android' ? 
+        <KeyboardAvoidingView behavior="height" /> : null
+      }
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
-  container:{
-    flex: 1,
+  container: {
+    flex: 1
   }
 
-})
+});
+
+export default Chat;
