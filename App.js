@@ -11,9 +11,14 @@ const Stack = createNativeStackNavigator();
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, disableNetwork, enableNetwork } from "firebase/firestore";
+import { Alert } from "react-native";
+import { useEffect } from "react";
+import { useNetInfo } from "@react-native-community/netinfo"
 
 const App = () => {
+// Defines network connectivity status
+const connectionStatus = useNetInfo();
   
 // The web app's Firebase configuration
 const firebaseConfig = {
@@ -31,6 +36,15 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
+useEffect(() => {
+  if (connectionStatus.isConnected === false){
+    Alert.alert("Connection Lost!");
+    disableNetwork(db);
+  }else if(connectionStatus.isConnected === true){
+    enableNetwork(db);
+  }
+}, [connectionStatus.isConnected]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -44,7 +58,12 @@ const db = getFirestore(app);
           name="Chat"
         >
           {
-          props => <Chat db={db}{...props} />
+          props => 
+          <Chat
+            isConnected={connectionStatus.isConnected}
+            db={db}
+            {...props}
+          />
           }
         </Stack.Screen>
       </Stack.Navigator>
