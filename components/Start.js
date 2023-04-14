@@ -13,9 +13,8 @@ const Start = ({ navigation }) => {
   const signInUser = () => {
     const auth = getAuth();
     signInAnonymously(auth)
-    .then(_result => {
-      const user = _result;
-      navigation.navigate("Chat", {name: name, userID: user.id, color:color });
+    .then(result => {
+      navigation.navigate("Chat", {name: name, userID: result.user.uid, color:color });
       Alert.alert("You have signed in!");
     })
     .catch((error) =>{
@@ -36,7 +35,7 @@ const Start = ({ navigation }) => {
           source={require("../assets/backgroundimage.png")}
           style={styles.backGroundImage}
         >
-        <Text style={styles.title}>Chat App2</Text>  
+        <Text style={styles.title}>Chat App</Text>  
           <View style={styles.startbackGround}>
             <TextInput
               style={styles.textInput}
