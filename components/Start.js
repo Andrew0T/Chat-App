@@ -6,19 +6,18 @@ import {
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const Start = ({ navigation }) => {
-
+  const auth = getAuth();
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
 
   const signInUser = () => {
-    const auth = getAuth();
     signInAnonymously(auth)
     .then(result => {
       navigation.navigate("Chat", {name: name, userID: result.user.uid, color:color });
-      Alert.alert("You have signed in!");
+      Alert.alert(`${name} has signed in!`);
     })
     .catch((error) =>{
-      Alert.alert(error + "Unable to sign in, please try again");
+      Alert.alert(error + "Unable to Signin, please try again");
     })
   }
 
@@ -35,8 +34,10 @@ const Start = ({ navigation }) => {
           source={require("../assets/backgroundimage.png")}
           style={styles.backGroundImage}
         >
-        <Text style={styles.title}>Chat App</Text>  
-          <View style={styles.startbackGround}>
+        <Text style={styles.title}>
+          Chat App
+        </Text>  
+          <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
               onChangeText={setName}
@@ -71,7 +72,8 @@ const Start = ({ navigation }) => {
             </View>
             <TouchableOpacity 
               style={styles.startButton}
-              onPress={() => signInUser()}
+              onPress={signInUser}
+              
             >
               <Text style={styles.startButtonText}>
                 Start Chat
@@ -103,8 +105,8 @@ const styles = StyleSheet.create({
   color: '#FFFFFF',
   paddingVertical: '15%',
 },
-  startbackGround: {
-    backgroundColor: 'white',
+  inputContainer: {
+    backgroundColor: '#FFFF',
     height: '44%',
     width: '88%',
     alignItems: 'center',
