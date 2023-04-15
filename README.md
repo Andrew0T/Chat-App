@@ -15,10 +15,11 @@ Key features
 
 Technologies
 
+  JavaScript
   React Native
   Expo
   Gifted Chat
-  Google firebase
+  Google Firebase
 
 Dependencies: 
     "@react-navigation/native": "^6.1.6",
@@ -48,4 +49,16 @@ Setting up the development environment
   To Start Chat-App: type npx expo start or expo start
   Should the simulator/emulater not load, stop it, then use the Cold or Re- Boot option.
 
-Chat-App-Screenshot.png
+  Database configuration:
+
+    Go to https://firebase.google.com/ and sign in with your existing or create a new Google account
+    Go to Firebase console and click on "Create Project"
+    Once on your project's dashboard, click on "Develop" on the left, then "Cloud Firestore", then "Create Database" and follow the instructions, selecting "Test Mode"
+    Create a new collection named "messages"
+    Under "Project Settings", scroll down and click the "Firestore for Web" button (</>)
+    Choose a name for the chat app, then click "Register" and copy the configuration code to the cloned repository into app.js, replacing the following with your configuration code: apiKey: '...', authDomain: '...', projectId: '...', storageBucket: '...', messagingSenderId: '...', appId: '...',
+    To be able to upload photos, go to "Storage" on the left, then the "Rules" tab, then exchange "allow read, write: if false;" for "allow read, write: if true;"
+
+
+  https://github.com/Andrew0T/Chat-App/blob/master/images/Chat-App-Screenshot.png
+  
