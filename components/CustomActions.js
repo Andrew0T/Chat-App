@@ -62,9 +62,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
           },
         });
       } else Alert.alert("Error occurred while fetching location");
-        if (!result.canceled) await uploadAndSendImage(result.assets[0].uri);
-        else Alert.alert("Permissions not granted.");
-    } 
+    } else Alert.alert("Permissions not granted.");
   }
 
   // Obtains file name from the uri
