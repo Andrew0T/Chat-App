@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
-         Alert, ImageBackground, StyleSheet, Text,
-         TextInput, TouchableOpacity, View
-       } from 'react-native';
+  Alert, ImageBackground, StyleSheet, Text,
+  TextInput, TouchableOpacity, View
+} from 'react-native';
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const Start = ({ navigation }) => {
@@ -30,57 +30,58 @@ const Start = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-        <ImageBackground
-          source={require("../assets/backgroundimage.png")}
-          style={styles.backGroundImage}
-        >
+      <ImageBackground
+        source={require("../assets/backgroundimage.png")}
+        style={styles.backGroundImage}
+      >
         <Text style={styles.title}>
           Chat App
-        </Text>  
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={setName}
-              value={name}
-              placeholder="Enter user name"
-              accessibilityLabel="Enter user name"
-            />
+        </Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.textInput}
+            onChangeText={setName}
+            value={name}
+            placeholder="Enter user name"
+            accessibilityLabel="Enter user name"
+          />
             <View style={styles.selectColor}>
-              <Text style={styles.colorText}>Choose Background Color:</Text>
+              <Text style={styles.colorText}>
+                Choose Background Color:
+              </Text>
               <View style={styles.buttonColors}>
                 <TouchableOpacity
                   style={[styles.colorButton,{ backgroundColor: backGroundColors.yellow }]}
-                  onPress={() => setColor({ color: backGroundColors.yellow })}
+                  onPress={() => setColor(backGroundColors.yellow)}
                   accessibilityLabel='yellow background'
                 />
                 <TouchableOpacity
                   style={[styles.colorButton,{ backgroundColor: backGroundColors.purple }]}
-                  onPress={() => setColor({ color: backGroundColors.purple })}
+                  onPress={() => setColor(backGroundColors.purple )}
                   accessibilityLabel='purple background'
                 />
                 <TouchableOpacity
                   style={[styles.colorButton,{ backgroundColor: backGroundColors.grey }]}
-                  onPress={() => setColor({ color: backGroundColors.grey })}
+                  onPress={() => setColor(backGroundColors.grey)}
                   accessibilityLabel='grey background'
                 />
                 <TouchableOpacity
                   style={[styles.colorButton, { backgroundColor: backGroundColors.green }]}
-                  onPress={() => setColor({ color: backGroundColors.green })}
+                  onPress={() => setColor(backGroundColors.green)}
                   accessibilityLabel='green background'
                 />
               </View>
             </View>
-            <TouchableOpacity 
-              style={styles.startButton}
-              onPress={signInUser}
-              
-            >
-              <Text style={styles.startButtonText}>
-                Start Chat
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
+          <TouchableOpacity
+            style={styles.startButton}
+            onPress={() => signInUser()}
+          >
+            <Text style={styles.startButtonText}>
+              Start Chat
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -91,20 +92,20 @@ const styles = StyleSheet.create({
   },
 
   backGroundImage: {
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  resizeMode: 'cover',
-  paddingVertical: '6%',
-},
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    resizeMode: 'cover',
+    paddingVertical: '6%',
+  },
 
   title: {
-  fontSize: 45,
-  fontWeight: '600',
-  color: '#FFFFFF',
-  paddingVertical: '15%',
-},
+    fontSize: 45,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    paddingVertical: '15%',
+  },
   inputContainer: {
     backgroundColor: '#FFFF',
     height: '44%',
