@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { addDoc, collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 
@@ -15,45 +15,45 @@ const Chat = ({ db, isConnected, navigation, route, storage }) => {
 
   let unsubMessages;
 
-    useEffect(() => {
-      navigation.setOptions({ title: name, color: color });
-      
-      if (isConnected === true){
-        if (unsubMessages) unsubMessages();
-        unsubMessages=null;
-        
-        const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
-        
-        unsubMessages = onSnapshot(q, (docs) => {
-          let newMessages = [];
-          docs.forEach(doc => {
-            newMessages.push({
-              id: doc.id,
-              ...doc.data(),
-              createdAt: new Date(doc.data().createdAt.toMillis())
-            })
+  useEffect(() => {
+    navigation.setOptions({ title: name, color: color });
+
+    if (isConnected === true){
+      if (unsubMessages) unsubMessages();
+      unsubMessages=null;
+
+      const q = query(collection(db, "messages"), orderBy("createdAt", "desc"));
+
+      unsubMessages = onSnapshot(q, (docs) => {
+        let newMessages = [];
+        docs.forEach(doc => {
+          newMessages.push({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: new Date(doc.data().createdAt.toMillis())
           })
-          cacheMessages(newMessages);
-          setMessages(newMessages);
         })
-      }else loadCachedMessages();
-      return () => {
+        cacheMessages(newMessages);
+        setMessages(newMessages);
+      })
+    }else loadCachedMessages();
+    return () => {
       if (unsubMessages) unsubMessages();
     }
   }, [isConnected]);
-  
- const loadCachedMessages = async() =>{
-  const cachedMessages = await AsyncStorage.getItem("messages") || [];
-  setMessages(JSON.parse(cachedMessages));
- }
 
- const cacheMessages = async(messagesToCache) => {
-  try {
-    await AsyncStorage.setItem("messages", JSON.stringify(messagesToCache));
-  }catch(error){
-    console.log(error.message);
+  const loadCachedMessages = async() =>{
+    const cachedMessages = await AsyncStorage.getItem("messages") || [];
+    setMessages(JSON.parse(cachedMessages));
   }
- }
+
+  const cacheMessages = async(messagesToCache) => {
+    try {
+      await AsyncStorage.setItem("messages", JSON.stringify(messagesToCache));
+    }catch(error){
+      console.log(error.message);
+    }
+  }
 
   const onSend = (newMessages) => {
     addDoc(collection(db, "messages"), newMessages[0])
@@ -80,38 +80,40 @@ const Chat = ({ db, isConnected, navigation, route, storage }) => {
   }
 
   const renderCustomActions = (props) => {
-    return <CustomActions userID={userID}
-              storage={storage}
-              {...props}
-            />;
+    return <CustomActions
+        userID={userID}
+        storage={storage}
+        {...props}
+    />;
   };
 
-//renders Mapview location with message
+  //renders Mapview location with message
   const renderCustomView = (props) => {
     const {currentMessage} = props;
     if (currentMessage.location){
       return (
         <MapView
-          style={{width: 150,
+          style={{
+            width: 150,
             height: 100,
             borderRadius: 13,
             margin: 3}}
-          region={{
-            latitude: currentMessage.location.latitude,
-            longitude: currentMessage.location.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        />
+            region={{
+              latitude: currentMessage.location.latitude,
+              longitude: currentMessage.location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
       );
     }
     return null;
   }
 
   return (
-    <View style={[styles.container, {backgroundColor: color}]} >
+    <View style={[styles.container, {backgroundColor: color }]} >
       <Text>
-        Welcome Back
+      Welcome Back
       </Text>
       <GiftedChat
         messages={messages}
@@ -126,9 +128,8 @@ const Chat = ({ db, isConnected, navigation, route, storage }) => {
           avatar: avatar
         }}
       />
-           
-      { Platform.OS === 'android' ? 
-        <KeyboardAvoidingView behavior="height" /> : null
+      { Platform.OS === 'android' ?
+      <KeyboardAvoidingView behavior="height" /> : null
       }
     </View>
   )
