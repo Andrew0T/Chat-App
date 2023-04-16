@@ -8,7 +8,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
   const actionSheet = useActionSheet();
 
   const onActionPress = () => {
-    const options = [ 'Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
+    const options = [ 'Choose From Library', 'Take Picture', 'Send Location', 'Cancel '];
     const cancelButtonIndex = options.length - 1;
     actionSheet.showActionSheetWithOptions(
       {
@@ -18,14 +18,14 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
       async (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            pickImage();
-            return;
+          pickImage();
+          return;
           case 1:
-            takePhoto();
-            return;
+          takePhoto();
+          return;
           case 2:
-            getLocation();
-            return;
+          getLocation();
+          return;
           default:
         }
       },
@@ -37,7 +37,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
     if (permissions?.granted) {
       let result = await ImagePicker.launchImageLibraryAsync();
       if (!result.canceled) await uploadAndSendImage(result.assets[0].uri);
-        else Alert.alert("Permissions not granted.");
+      else Alert.alert("Permissions not granted.");
     }
   }
 
@@ -46,7 +46,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
     if (permissions?.granted) {
       let result = await ImagePicker.launchCameraAsync();
       if (!result.canceled) await uploadAndSendImage(result.assets[0].uri);
-        else Alert.alert("Permissions not granted.");
+      else Alert.alert("Permissions not granted.");
     }
   }
 
@@ -76,7 +76,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
     const uniqueRefString = generateReference(imageURI);
     const newUploadRef = ref(storage, uniqueRefString );
     const response = await fetch(imageURI);
-    const blob = await response.blob();    
+    const blob = await response.blob();
     uploadBytes(newUploadRef, blob).then(async(snapshot)=> {
       const imageURL = await getDownloadURL(snapshot.ref)
       onSend({image: imageURL})
@@ -85,17 +85,17 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
   }
 
   return (
-    <TouchableOpacity 
-      style={styles.container}
-      onPress={onActionPress}
-    >    
-      <View style={[styles.wrapper, wrapperStyle]}>
-        <Text style={[styles.iconText, iconTextStyle]}>
-          x
-        </Text>
-      </View>
+    <TouchableOpacity
+    style={styles.container}
+    onPress={onActionPress}
+    >
+    <View style={[styles.wrapper, wrapperStyle]}>
+    <Text style={[styles.iconText, iconTextStyle]}>
+    x
+    </Text>
+    </View>
     </TouchableOpacity>
-    
+
   );
 }
 
