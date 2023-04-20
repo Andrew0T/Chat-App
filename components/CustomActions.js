@@ -91,7 +91,7 @@ const CustomActions = ({ wrapperStyle, iconTextStyle, onSend, storage, userID })
     >
     <View style={[styles.wrapper, wrapperStyle]}>
     <Text style={[styles.iconText, iconTextStyle]}>
-    x
+    +
     </Text>
     </View>
     </TouchableOpacity>
