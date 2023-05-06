@@ -64,7 +64,7 @@ Setting up the development environment:
 	This should include the following: apiKey: '...', authDomain: '...', projectId: '...', storageBucket: '...', messagingSenderId: '...', appId: '...',
   To upload photos, go to "Storage" on the left, then the "Rules" tab is "allow read, write: if true;"
 
-![Chat-App-Screenshot](https://user-images.githubusercontent.com/113891991/232241539-0580c771-ffd1-4779-b42a-8fe49b033668.png)
+![Chat-App-Screenshot](https://user-images.githubusercontent.com/113891991/236624122-8b675556-c09a-4e2a-bd70-fc133edc28d9.png)
 
+[AndrewT-2023-04-18-225946.webm](https://user-images.githubusercontent.com/113891991/236624103-5964928d-b547-44c1-a5a4-124be4691d35.webm)
 
-  
